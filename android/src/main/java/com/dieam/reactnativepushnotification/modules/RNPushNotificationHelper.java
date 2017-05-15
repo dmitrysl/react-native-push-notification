@@ -161,8 +161,20 @@ public class RNPushNotificationHelper {
                     .setContentTitle(title)
                     .setTicker(bundle.getString("ticker"))
                     .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setAutoCancel(bundle.getBoolean("autoCancel", true));
+
+            int priority = bundle.getInt("priority", NotificationCompat.PRIORITY_HIGH);
+            if (priority < NotificationCompat.PRIORITY_MIN) priority = NotificationCompat.PRIORITY_MIN;
+            if (priority > NotificationCompat.PRIORITY_MAX) priority = NotificationCompat.PRIORITY_MAX;
+            notification.setPriority(priority);
+
+            if (bundle.containsKey("onlyAlertOnce")) {
+                notification.setOnlyAlertOnce(bundle.getBoolean("onlyAlertOnce", false));
+            }
+
+            if (bundle.containsKey("data")) {
+                notification.setExtras(bundle.getBundle("data"));
+            }
 
             String group = bundle.getString("group");
             if (group != null) {
